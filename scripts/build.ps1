@@ -13,12 +13,12 @@ try {
         go build -trimpath -ldflags '-s -w' -o (Join-Path release $target[2]) .
         if ($LASTEXITCODE) { throw "Build failed: $target" }
     }
-    Copy-Item config.example.yaml, README.md -Destination release
+    Copy-Item config.example.yaml, README.md, LICENSE -Destination release
     foreach ($target in @(@('windows-amd64', 'navhub-windows-amd64.exe', 'navhub.exe'), @('linux-amd64', 'navhub-linux-amd64', 'navhub'), @('linux-arm64', 'navhub-linux-arm64', 'navhub'))) {
         $packageDir = Join-Path release $target[0]
         New-Item -ItemType Directory -Force $packageDir | Out-Null
         Copy-Item (Join-Path release $target[1]) -Destination (Join-Path $packageDir $target[2])
-        Copy-Item README.md, config.example.yaml -Destination $packageDir
+        Copy-Item README.md, config.example.yaml, LICENSE -Destination $packageDir
         Copy-Item docs, deploy -Destination $packageDir -Recurse -Force
         Compress-Archive -Path (Join-Path $packageDir '*') -DestinationPath (Join-Path release ("navhub-1.0.0-" + $target[0] + '.zip')) -Force
     }
