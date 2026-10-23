@@ -1,0 +1,8 @@
+# 首次启动自动创建 config.yaml。相对路径以配置文件目录为基准。
+host: 0.0.0.0
+port: 3002
+data_dir: data
+open_browser: true
+# HTTPS 反向代理部署时设为 true；直接 HTTP 访问时保持 false。
+secure_cookie: false
+log_file: true

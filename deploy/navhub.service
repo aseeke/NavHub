@@ -1,0 +1,21 @@
+[Unit]
+Description=NavHub personal navigation center
+After=network.target
+
+[Service]
+Type=simple
+User=navhub
+Group=navhub
+WorkingDirectory=/opt/navhub
+ExecStart=/opt/navhub/navhub --config /opt/navhub/config.yaml --no-browser
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/navhub/data
+
+[Install]
+WantedBy=multi-user.target
