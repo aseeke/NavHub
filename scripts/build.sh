@@ -11,12 +11,14 @@ cp config.example.yaml README.md LICENSE release/
 for platform in windows-amd64 linux-amd64 linux-arm64; do
   mkdir -p "release/$platform"
   if [ "$platform" = windows-amd64 ]; then
+    package_binary=navhub.exe
     cp release/navhub-windows-amd64.exe "release/$platform/navhub.exe"
   else
+    package_binary=navhub
     cp "release/navhub-$platform" "release/$platform/navhub"
   fi
   cp README.md config.example.yaml LICENSE "release/$platform/"
   cp -R docs deploy "release/$platform/"
-  tar -czf "release/navhub-1.0.0-$platform.tar.gz" -C "release/$platform" .
+  tar -czf "release/navhub-1.0.0-$platform.tar.gz" -C "release/$platform" "$package_binary" README.md LICENSE config.example.yaml docs deploy
 done
 (cd release && sha256sum navhub-* > SHA256SUMS)

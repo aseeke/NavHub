@@ -20,7 +20,8 @@ try {
         Copy-Item (Join-Path release $target[1]) -Destination (Join-Path $packageDir $target[2])
         Copy-Item README.md, config.example.yaml, LICENSE -Destination $packageDir
         Copy-Item docs, deploy -Destination $packageDir -Recurse -Force
-        Compress-Archive -Path (Join-Path $packageDir '*') -DestinationPath (Join-Path release ("navhub-1.0.0-" + $target[0] + '.zip')) -Force
+        $packageInputs = @($target[2], 'README.md', 'LICENSE', 'config.example.yaml', 'docs', 'deploy') | ForEach-Object { Join-Path $packageDir $_ }
+        Compress-Archive -Path $packageInputs -DestinationPath (Join-Path release ("navhub-1.0.0-" + $target[0] + '.zip')) -Force
     }
     Get-FileHash release/navhub-* -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $(Split-Path -Leaf $_.Path)" } | Set-Content release/SHA256SUMS -Encoding ascii
 } finally { Remove-Item Env:GOOS, Env:GOARCH, Env:CGO_ENABLED -ErrorAction SilentlyContinue; Pop-Location }
