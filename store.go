@@ -52,7 +52,7 @@ type Data struct {
 }
 
 func defaults() Data {
-	return Data{FormatVersion: 1, Categories: []Category{}, Items: []Item{}, Settings: Settings{Title: "NavHub", BackgroundColor: "#dce6f2", Gradient: true, Overlay: 10, ShowClock: true, ShowDate: true, CardColor: "#ffffff", IconColor: "#537da8", Target: "_blank", Radius: 12, Gap: 14}}
+	return Data{FormatVersion: 1, Categories: []Category{}, Items: []Item{}, Settings: Settings{Title: "NavHub", BackgroundColor: "#f5f7fa", Gradient: true, Overlay: 0, ShowClock: true, ShowDate: true, CardColor: "#ffffff", IconColor: "#526b91", Target: "_blank", Radius: 12, Gap: 14}}
 }
 func openDB(path string) (*sql.DB, error) {
 	db, err := sql.Open("sqlite", path)

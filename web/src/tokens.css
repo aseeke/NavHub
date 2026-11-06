@@ -1,1 +1,11 @@
-:root{--ink:#273e57;--muted:#718297;color-scheme:light}
+:root {
+  color-scheme: light;
+  --page: #f5f7fa;
+  --surface: #ffffff;
+  --surface-muted: #f0f3f7;
+  --ink: #293548;
+  --muted: #647287;
+  --border: #dfe5ed;
+  --accent: #526b91;
+  --danger: #b34e52;
+}

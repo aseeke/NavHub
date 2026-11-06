@@ -1,6 +1,6 @@
 // Run against a built binary: node scripts/smoke.mjs release/navhub-windows-amd64.exe
 import { spawn, spawnSync } from 'node:child_process'
-import { mkdtempSync, writeFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, writeFileSync, rmSync, readFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { resolve, join } from 'node:path'
 import assert from 'node:assert/strict'
@@ -8,7 +8,8 @@ const binary = resolve(process.argv[2] || 'release/navhub-windows-amd64.exe')
 const temp = mkdtempSync(join(tmpdir(), 'navhub-smoke-'))
 const config = join(temp, 'config.yaml')
 writeFileSync(config, 'host: 127.0.0.1\nport: 3138\ndata_dir: data\nopen_browser: false\nlog_file: true\n')
-assert.match(spawnSync(binary, ['--version'], { encoding: 'utf8' }).stdout, /1\.0\.0/)
+const expectedVersion = JSON.parse(readFileSync(new URL('../web/package.json', import.meta.url), 'utf8')).version
+assert.equal(spawnSync(binary, ['--version'], { encoding: 'utf8' }).stdout.trim(), 'NavHub ' + expectedVersion)
 assert.match(spawnSync(binary, ['--help'], { encoding: 'utf8' }).stderr, /config/)
 let child
 async function start() {

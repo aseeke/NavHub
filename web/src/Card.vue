@@ -1,6 +1,7 @@
 <script setup>
 import { initials, ink } from './utils'
 import { ref, watch } from 'vue'
+import Icon from './Icon.vue'
 const props = defineProps({ item: Object, settings: Object, preview: Boolean, managing: Boolean })
 const failed = ref(false)
 watch(() => props.item.icon, () => failed.value = false)
@@ -12,6 +13,6 @@ defineEmits(['edit'])
       <img v-if="item.icon && !failed" :key="item.icon" :src="item.icon" alt="" loading="lazy" referrerpolicy="no-referrer" @error="failed = true">
       <span v-else>{{ initials(item.name) }}</span>
     </span>
-    <span class="card-name">{{ item.name || '项目名称' }}</span><span v-if="managing" class="edit-mark" aria-hidden="true">✎</span>
+    <span class="card-name">{{ item.name || '项目名称' }}</span><Icon v-if="managing" name="edit" class="edit-mark"/>
   </component>
 </template>

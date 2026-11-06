@@ -1,70 +1,140 @@
 # NavHub
 
-**你的数字生活，从这里出发。**
+轻量级、跨平台、自托管的个人导航中心。
 
-NavHub 是轻量级、跨平台、自托管的个人导航中心。把分散在服务器、云平台与不同域名上的常用系统，整理成一个安静、美观、随时可达的首页。导航优先、管理简单，下载一个程序就能运行，无需另外安装数据库或前端运行时。
+将不同服务器、域名和云平台上的常用系统整理到一个首页。NavHub 使用 **Vue 3 + Go + SQLite**，前端资源嵌入程序，运行时无需额外安装数据库、Node.js 或 Go。
 
-首页采用无侧边栏的沉浸式布局：居中时钟与日期、分类、五列轻卡片，以及右下角浮动操作栏。默认背景为项目自绘的渐变山景，支持自己的图片和颜色。布局参考 Sun-Panel 的使用方式，代码、品牌与视觉素材均未复制。
+[下载安装包](https://github.com/aseeke/NavHub/releases/latest) · [源码仓库](https://github.com/aseeke/NavHub) · [更新记录](CHANGELOG.md) · [MIT 许可证](LICENSE)
 
-![NavHub 桌面首页](docs/screenshots/home-desktop.png)
+![NavHub 首页](docs/screenshots/home-desktop.png)
 
-> 截图中的项目仅为自动化测试示例。正式首次启动是空导航，默认私有访问，没有预置管理员或密码。
+> 截图使用示例数据。首次启动为空导航，默认私有访问，没有预设管理员或密码。
 
-源码仓库：[aseeke/NavHub](https://github.com/aseeke/NavHub) · 安装包：[GitHub Releases](https://github.com/aseeke/NavHub/releases/latest)
+## 功能
 
-## V1.0 功能
+- **清晰的首页**：浅色背景、五列导航卡片、分类、日期和时钟，手机自动调整布局。
+- **简单的管理**：通过弹窗和抽屉新增、编辑项目，管理分类及页面设置。
+- **自动文字图标**：`GitHub → GI`、`Oracle Cloud → OC`、`数据管理 → 数据`，无需第三方图标服务。
+- **拖拽排序**：支持分类排序、分类内排序和跨分类移动，保存后刷新不丢失。
+- **本地搜索**：搜索名称、网址和描述；`/` 打开搜索，`Esc` 关闭。
+- **访问控制**：私有模式须登录；公开模式允许浏览，管理员才能修改。
+- **外观设置**：自定义背景、卡片颜色、图标、圆角、间距及打开方式。
+- **数据备份**：JSON 导入导出，以及包含数据库与上传图片的完整 ZIP 备份。
+- **单文件部署**：Windows x64、Linux x64、Linux ARM64；Windows 提供后台运行脚本。
 
-- 响应式导航卡片：桌面五列，移动端两列；名称、图标、卡片颜色，自定义 HEX 色值。
-- 自动文字图标：`GitHub → GI`、`Oracle Cloud → OC`、`数据管理 → 数据`；名称修改时实时预览，无第三方图标 API。
-- 分类与项目的新增、编辑、删除；分类隐藏；分类排序、项目分类内排序与跨分类拖动。
-- 浏览模式点击访问；管理模式点击编辑，样式与提示清晰区分；支持新标签页或当前页打开。
-- 内存搜索名称、URL 与描述，结果保留分类；`/` 打开搜索，`Esc` 关闭，输入框内不拦截 `/`。
-- 抽屉与弹窗管理，无额外 Admin 框架；上传图标或背景，支持 PNG、JPEG、GIF、WebP，每张 ≤ 5MB。
-- 首次创建管理员、bcrypt 密码哈希、7 天登录会话、登录限流、同源写入检查；默认私有，管理员可改为公开只读。
-- 页面标题、背景图片 / 颜色 / 渐变、遮罩、时钟、日期，以及默认卡片颜色、图标底色、圆角、间距、打开方式。
-- SQLite 持久化、schema 版本管理、事务保存、并发编辑冲突检测；JSON 导入导出与包含媒体的完整 ZIP 备份。
-- Go embed 静态页面，Windows x64 / Linux x64 / Linux ARM64 单文件发布；标准输出和滚动文件日志。
+保持个人导航的定位，不包含服务器监控、Docker 管理、多用户权限或插件市场。
 
-不包含多用户权限、监控、Docker 管理、OAuth、插件市场、自动发现或 AI 功能。
+## 下载
 
-## 快速启动
+在 [GitHub Releases](https://github.com/aseeke/NavHub/releases/latest) 下载对应平台的安装包。
 
-构建后的程序位于 `release/`。无需安装 Node.js、Go 或 SQLite。
+| 安装包 | 适用平台 | 包内程序 |
+|---|---|---|
+| `navhub-1.0.1-windows-amd64.zip` | Windows 10/11 x64 | `navhub.exe` |
+| `navhub-1.0.1-linux-amd64.zip` | Linux x64 | `navhub` |
+| `navhub-1.0.1-linux-arm64.zip` | Linux ARM64 | `navhub` |
 
-### Windows 10 / 11 x64
+`SHA256SUMS.txt` 用于核对下载文件。安装包包含程序、示例配置、文档与许可证，不包含用户配置或数据库。
 
-将 `navhub-windows-amd64.exe` 重命名为 `navhub.exe`，放入可写目录并双击。首次启动自动创建 `config.yaml` 与 `data/`，检查端口、初始化数据库，并在交互桌面打开浏览器。
+## Windows 启动
 
-```powershell
-.\navhub.exe
-.\navhub.exe --config .\config.yaml --port 3002
-.\navhub.exe --no-browser
-.\navhub.exe --version
-.\navhub.exe --help
+解压到可写目录，例如 `D:\NavHub`。解压后的 Windows 安装目录包含：
+
+```text
+NavHub/
+  navhub.exe
+  start-background.vbs
+  stop-background.vbs
+  navhub-background.ps1
+  config.example.yaml
+  README.md
+  LICENSE
+  docs/
+  deploy/
 ```
 
-访问 [http://127.0.0.1:3002](http://127.0.0.1:3002)，设置管理员账户及至少 10 字节、至多 72 字节的密码。默认监听 `0.0.0.0:3002`，其他设备可通过本机 IP 访问。仅本机使用时把 `host` 改为 `127.0.0.1`。
+### 前台运行
 
-控制台显示版本、访问地址、监听地址、数据目录与运行状态。按 `Ctrl+C` 正常退出，之后可再次启动。
+双击 `navhub.exe`。程序显示版本、服务地址、数据目录和运行日志，并在交互桌面自动打开浏览器。
 
-### Linux x64 / ARM64
+首次启动自动创建 `config.yaml` 和 `data/`。默认访问地址为 [http://127.0.0.1:3002](http://127.0.0.1:3002)，按页面提示创建管理员即可。密码需为 10–72 字节，中文字符通常占用多个字节。
 
-按设备架构选择产物，重命名为 `navhub`：
+控制台中的“数据库初始化完成”“运行中”“管理操作完成”是正常日志。退出时在控制台按 `Ctrl+C`。
+
+### 后台运行，不显示控制台
+
+1. 如果当前已打开 `navhub.exe`，先在原控制台按 `Ctrl+C` 退出。
+2. 双击 **`start-background.vbs`**。
+3. 手动打开 [http://127.0.0.1:3002](http://127.0.0.1:3002)。使用自定义端口时以配置为准。
+4. 停止时双击 **`stop-background.vbs`**。
+
+三个脚本必须与 `navhub.exe` 放在同一目录。后台启动不打开浏览器，仍使用该目录的 `config.yaml` 和既有数据，不会重新初始化管理员。重复点击启动脚本不会创建第二个同目录进程；停止脚本只匹配本目录的程序，不影响其他安装目录，也不删除数据。
+
+后台脚本不是 Windows 服务，不设置开机启动。注销或重启 Windows 后需要重新运行；需要持续托管时参考下方的 Windows 服务方式。
+
+如果系统禁用了 Windows Script Host，可以在安装目录执行：
+
+```powershell
+# 启动器退出后，NavHub 继续在后台运行
+powershell -NoProfile -ExecutionPolicy Bypass -File .\navhub-background.ps1 -Action Start
+
+# 停止
+powershell -NoProfile -ExecutionPolicy Bypass -File .\navhub-background.ps1 -Action Stop
+```
+
+### Windows 服务（可选）
+
+程序支持 Windows Service Control Manager。先在固定目录放好程序、配置和数据目录，再使用管理员终端注册：
+
+```powershell
+sc.exe create NavHub binPath= '"D:\NavHub\navhub.exe" --config "D:\NavHub\config.yaml" --no-browser' start= auto
+sc.exe start NavHub
+sc.exe stop NavHub
+
+# 卸载服务，不删除数据
+sc.exe delete NavHub
+```
+
+服务名固定为 `NavHub`，不会自动打开浏览器。服务身份需要读取配置、写入数据目录的权限；不要与双击启动的实例同时占用同一端口。SCM 的实际注册及关机通知仍需目标机器验收。
+
+## Linux 启动
+
+下载与 CPU 架构对应的安装包，解压后进入目录：
 
 ```bash
 chmod +x navhub
 ./navhub
+
+# 可选参数
 ./navhub --config ./config.yaml
 ./navhub --port 3002
 ./navhub --version
 ./navhub --help
 ```
 
-Linux 不自动打开浏览器。两个 Linux 产物均设置 `CGO_ENABLED=0`，无需系统 SQLite 动态库。
+Linux 不自动打开浏览器。程序使用纯 Go SQLite 驱动，发布时设置 `CGO_ENABLED=0`，无需安装系统 SQLite 动态库。
 
-### 配置
+### systemd（可选）
 
-默认读取**当前工作目录**的 `config.yaml`，不存在时创建。`data_dir` 的相对路径以**配置文件所在目录**为基准；配置文件的父目录须已存在。端口命令行参数优先于 YAML。完整模板见 [config.example.yaml](config.example.yaml)。
+以 `/opt/navhub` 为例，先把程序与 `config.yaml` 放好，再创建专用运行用户和数据目录：
+
+```bash
+sudo useradd --system --no-create-home --shell /usr/sbin/nologin navhub
+sudo mkdir -p /opt/navhub/data
+sudo chown navhub:navhub /opt/navhub/data
+sudo chmod +x /opt/navhub/navhub
+sudo cp deploy/navhub.service /etc/systemd/system/navhub.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now navhub
+sudo systemctl status navhub
+journalctl -u navhub -f
+```
+
+[服务文件](deploy/navhub.service) 默认只允许写入 `/opt/navhub/data`。请预先创建配置文件；更换数据目录时同步修改 `ReadWritePaths`。systemd 安装与 Linux 真机运行仍需目标环境验收。
+
+## 配置
+
+默认读取当前工作目录的 `config.yaml`，不存在时自动创建；后台脚本固定使用程序同目录的配置。`data_dir` 的相对路径以配置文件所在目录为基准。
 
 ```yaml
 host: 0.0.0.0
@@ -75,155 +145,115 @@ secure_cookie: false
 log_file: true
 ```
 
-`open_browser: false` 或 `--no-browser` 关闭自动打开浏览器。`secure_cookie: true` 用于 HTTPS 反向代理，HTTP 直连时保持 `false`。反向代理须保留原始 Host，服务端据此验证浏览器请求来源。不建议将未配置 HTTPS 的管理登录直接暴露在公网。
+| 配置项 | 说明 |
+|---|---|
+| `host` | `0.0.0.0` 允许其他设备通过本机 IP 访问；仅本机使用改为 `127.0.0.1` |
+| `port` | HTTP 端口，命令行 `--port` 优先；修改后需重启 |
+| `data_dir` | 数据库、图片、备份与日志目录 |
+| `open_browser` | 交互桌面是否自动打开浏览器；`--no-browser` 可覆盖 |
+| `secure_cookie` | HTTPS 反向代理部署设为 `true`；HTTP 直连保持 `false` |
+| `log_file` | 是否写入滚动文件日志 |
 
-## 后台运行
+HTTPS 反向代理应保留原始 Host，服务端据此检查写入请求来源。公网访问建议配置 HTTPS。端口占用时先退出旧实例，或通过 `--port` 更换端口，不需要删除数据库。
 
-### systemd
+## 使用导航
 
-以 `/opt/navhub` 为例，先放置二进制和配置、创建专用用户及数据目录，再安装 [deploy/navhub.service](deploy/navhub.service)：
+1. 首次创建管理员，再添加分类。
+2. 右下角操作栏 → **添加项目**，填写名称、HTTP / HTTPS 网址及分类。
+3. 默认生成文字图标；展开“外观与打开方式”可设置上传图标、卡片颜色和跳转方式。
+4. 进入 **管理模式**，点击卡片编辑，拖动卡片排序或移动分类，完成后退出管理模式。
+5. 在 **分类管理** 中重命名、排序、隐藏分类。非空分类须先迁移或单独删除项目才能删除。
+6. 在 **系统设置** 中调整外观、访问权限和备份。保存按钮始终显示在抽屉顶部。
 
-```bash
-sudo useradd --system --no-create-home --shell /usr/sbin/nologin navhub
-sudo mkdir -p /opt/navhub/data
-sudo chown navhub:navhub /opt/navhub/data
-sudo cp deploy/navhub.service /etc/systemd/system/navhub.service
-sudo systemctl daemon-reload
-sudo systemctl enable --now navhub
-sudo systemctl status navhub
-journalctl -u navhub -f
-```
+搜索在浏览器内完成，不会随每次输入请求后端。搜索时停用拖拽，清除搜索后再排序。多个窗口同时编辑时，旧版本保存会被拒绝，重新加载后再操作可避免覆盖他人的更新。
 
-服务文件默认只允许写入 `/opt/navhub/data`；请预先放好 `/opt/navhub/config.yaml`，自定义数据目录时同步修改 `ReadWritePaths`。升级前备份并停止服务，替换程序后启动。
-
-### Windows 服务
-
-程序支持 Windows Service Control Manager 的启动、停止与关机通知；服务模式不会打开浏览器。将程序放在固定目录，预先创建配置和数据目录，并在管理员终端注册（以下路径按实际安装位置修改）：
-
-```powershell
-sc.exe create NavHub binPath= '"D:\NavHub\navhub.exe" --config "D:\NavHub\config.yaml" --no-browser' start= auto
-sc.exe start NavHub
-sc.exe stop NavHub
-# 卸载服务，不删除数据
-sc.exe delete NavHub
-```
-
-服务使用 SCM 配置的身份运行；确保该身份可读配置、可写数据目录。服务名固定为 `NavHub`。Windows 服务注册、关机通知与 systemd 安装尚需目标机器实际验收，见验收记录。
-
-## 使用
-
-1. 创建管理员，点击「添加分类」。
-2. 右下角操作栏 → 添加项目；输入名称、HTTP / HTTPS 地址和分类，预览满意后保存。
-3. 操作栏 → 管理模式；点击卡片编辑，拖动卡片排序或移入其他分类，完成后退出管理模式。
-4. 管理模式 → 分类管理；拖动左侧手柄调整分类顺序，支持重命名和隐藏。
-5. 非空分类必须先迁移或单独删除项目才能删除；隐藏分类的项目也可在管理模式下编辑。
-6. 系统设置中切换公开 / 私有模式。公开访客不能写入，也不会收到隐藏分类与项目。
-
-保存成功后首页直接更新。若其他窗口已经保存过数据，当前保存会被拒绝并提示重新加载，避免覆盖新数据。排序在搜索状态下停用，清除搜索再拖动。
-
-## 数据与迁移
+## 数据、日志与备份
 
 ```text
 data/
-  navhub.db        SQLite 数据库（运行中还可能有 -wal / -shm 文件）
-  uploads/        图标及背景图片，随机文件名
-  backups/        手动生成的完整 ZIP 备份
-  navhub.log      文件日志，5MB 轮转，保留 3 份旧日志
+  navhub.db       SQLite 数据库
+  uploads/       上传图标和背景
+  backups/       手动生成的完整 ZIP 备份
+  navhub.log     文件日志
 ```
 
-数据库保存导航快照、管理员密码哈希和会话令牌的 SHA-256 摘要，不保存明文密码或明文令牌。导航保存为一个有版本号的 JSON 文档，分类及项目在数组中的顺序即显示顺序；适用于个人导航场景，单次请求 ≤ 4MB、最多 200 分类 / 5000 项目，避免不必要的 ORM 与分页请求。SQLite 使用单连接、WAL 和 5 秒 busy timeout。
+运行时可能出现 `navhub.db-wal` 和 `navhub.db-shm`，属于正常文件。日志默认每份约 5MB，保留 3 份历史文件；记录启动、退出及操作异常，不记录密码、Cookie 或明文会话令牌。关闭 `log_file` 后不会生成文件日志。
 
 ### JSON 导入导出
 
-系统设置 → 导出 JSON / 导入 JSON。导出含 `formatVersion`、`revision`、`categories`、`items`、`settings`，不包含管理员密码或登录会话。导入会要求确认，校验后在一个事务内替换导航及设置，失败不修改现有数据，管理员与会话不受影响。
+系统设置 → **导出 JSON / 导入 JSON**。导出包含分类、项目、页面和卡片设置，不包含管理员或会话。导入需要确认，会替换当前导航和设置，失败不会修改现有数据。
 
-**JSON 仅保存上传文件的引用，不会携带图片文件。** 仅导入 JSON 时需手动复制原来的 `uploads/`，或使用完整 ZIP 备份迁移。外部图标和背景 URL 依赖其原站可访问；默认文字图标完全本地生成。
+**JSON 仅保存上传图片的路径，不携带图片文件。** 完整迁移请选择 ZIP 备份，或额外复制原来的 `uploads/`。
 
-### 完整备份和恢复
+### 完整 ZIP 备份
 
-系统设置 → 完整 ZIP 备份。程序通过 SQLite `VACUUM INTO` 创建一致性快照，将 `navhub.db` 和 `uploads/` 一并打包到 `data/backups/`，并下载。备份**包含管理员密码哈希及会话摘要**，请按私密文件保管；不包含 `config.yaml`、旧备份和日志。
+系统设置 → **完整 ZIP 备份**。程序创建 SQLite 一致性快照，并打包数据库和上传图片，保存至 `data/backups/` 后提供下载。不包含配置、日志或旧备份；请定期清理不需要的备份文件。
 
-恢复步骤：
+完整备份包含管理员密码哈希和会话摘要，请按私密文件保管。恢复时：
 
-1. 停止 NavHub，另存当前完整 `data/` 作为回退。
-2. 准备新的空数据目录，解压 ZIP，使 `navhub.db` 和 `uploads/` 直接位于目录内；不要把旧 `-wal` / `-shm` 混入。
-3. 将 `config.yaml` 的 `data_dir` 指向恢复目录，启动程序，使用备份时的管理员账户登录。
+1. 停止程序，并另存当前 `data/` 作为回退。
+2. 将 ZIP 解压至新的空数据目录，使 `navhub.db` 和 `uploads/` 直接位于目录内。
+3. 将 `config.yaml` 的 `data_dir` 指向恢复目录，再启动程序，使用原管理员账户登录。
 
-也可以停止程序后打包整个 `data/`。不要只复制运行中数据库的主文件。备份采用手动保留策略，定期删除不再需要的 ZIP。上传文件采用追加保存，替换图标不会自动删除旧文件，以免破坏其他项目引用；如需回收，请停机备份后核对文件引用。
+也可停机后复制整个 `data/`。不要只复制运行中的数据库主文件，也不要将旧的 WAL / SHM 混入恢复目录。替换图片不会自动清理旧媒体，以免破坏已有引用。
 
-### schema 管理
+## 从 v1.0.0 升级
 
-从 V1 使用 SQLite `PRAGMA user_version=1` 管理结构版本。首次初始化在事务中完成，后续启动校验版本；高于当前程序支持的版本会拒绝启动。未来结构变更须追加事务迁移及数据保留测试。迁移错误停止启动并记录，不清空数据库。
+1. 先完成备份，再停止旧程序或服务。
+2. 替换 `navhub.exe` / `navhub`，以及 Windows 后台脚本。
+3. **保留原来的 `config.yaml` 和整个 `data/`。** 如果将新版解压到新目录，启动前先复制这两项，或在新配置中指向原数据目录。
+4. 启动新版，检查项目、图片和管理员登录。
 
-## 本地开发
+v1.0.1 的数据库 schema 仍为 1，不需要重新创建管理员。程序使用 `PRAGMA user_version` 管理结构版本；迁移失败或数据库版本过高会停止启动，不会清空数据库。已有自定义外观设置也不会被重置。
 
-需要 Go 1.26+、Node.js 22.12+ 与 npm。后端依赖标准 HTTP 库、[modernc.org/sqlite](https://pkg.go.dev/modernc.org/sqlite)、bcrypt 和 YAML；前端使用 [Vue 3](https://vuejs.org/guide/quick-start.html)、[Vite](https://vite.dev/guide/) 与按需使用的 SortableJS，不引入图标全集或 Admin 框架。首次依赖安装需要网络，运行时无外部 CDN 字体和脚本。
+## 开发与构建
 
-终端一：
+开发环境需要 Go 1.26+、Node.js 22.12+ 和 npm。运行安装包不需要这些依赖。
 
 ```bash
+# 终端一：后端，默认 3002 端口
 go mod download
 go run . --no-browser
-```
 
-终端二：
-
-```bash
+# 终端二：前端，通常为 5173 端口
 cd web
 npm ci
 npm run dev
 ```
 
-打开 Vite 显示的地址（通常是 `http://127.0.0.1:5173`），`/api` 与 `/uploads` 自动代理到 `127.0.0.1:3002`。构建前端后，Go 程序直接提供嵌入的 `static/`；修改前端需要重新构建前端及二进制。
+Vite 将 `/api` 和 `/uploads` 代理至 `127.0.0.1:3002`。前端生产构建输出至 `static/`；修改前端后需重建前端和 Go 程序，旧的 exe 不会自动更新。
 
-## 测试与发布
+```powershell
+# Windows：测试、构建前端、编译三平台、打包和生成校验值
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build.ps1
+```
+
+```bash
+# Linux：生成三平台程序及 tar.gz 包
+sh scripts/build.sh
+```
+
+产物位于 `release/`，Windows 构建脚本生成 ZIP，Linux 脚本生成 tar.gz。Windows 安装包自动附带三个后台运行脚本，所有安装包均使用白名单打包，排除运行时数据。
 
 ```bash
 go test -v ./...
 go vet ./...
 cd web
-npm ci
 npm test
-npm run build
 npx playwright install chromium firefox webkit
 npm run test:e2e
 ```
 
-浏览器测试会建立临时数据库和独立 3137 端口服务，不使用真实 `data/`，在 Chromium、Firefox 与 WebKit 中验证新增即时显示、图标、键盘搜索、真实跨分类拖动后刷新、图标上传、公开 / 私有访问、路由回退与响应式布局，生成 `docs/screenshots/` 截图。Windows 上 WebKit 执行较慢，测试使用 20 秒断言等待和 120 秒单用例上限。
-
-一键构建全部平台（前端构建 → 自动测试 → 嵌入资源 → 三平台编译 → SHA256）：
+Windows 后台脚本还可在项目根目录单独验证：
 
 ```powershell
-# Windows，在项目根目录执行
-powershell -ExecutionPolicy Bypass -File scripts/build.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-background.ps1
 ```
 
-```bash
-# Linux
-sh scripts/build.sh
-```
+自动化测试使用临时目录，不修改真实导航。详细结果见 [验收记录](docs/ACCEPTANCE.md)。Linux 两种架构已交叉编译；真实 Linux、Windows SCM、systemd、Safari 设备和 1GB VPS 压测的验证范围以验收记录为准。
 
-产物：`release/navhub-windows-amd64.exe`、`release/navhub-linux-amd64`、`release/navhub-linux-arm64`，附示例配置、README 和校验值。发布压缩包内程序统一命名为 `navhub.exe` / `navhub`。
+## 技术与许可
 
-详细验收结果及尚未完成的目标环境验证见 [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md)。本项目以 1GB VPS 为运行目标，尚未做真实 1GB VPS 负载测试。
+后端使用 Go 标准 HTTP 服务、[modernc.org/sqlite](https://pkg.go.dev/modernc.org/sqlite)、bcrypt 和 YAML；前端使用 [Vue](https://vuejs.org/)、[Vite](https://vite.dev/) 和 SortableJS。运行时不加载外部 CDN 脚本或字体，不引入大型图标库，不进行后台轮询，时钟每分钟在浏览器更新一次。
 
-## 工程结构
-
-```text
-main.go                 配置、启动、日志与优雅退出
-store.go                数据模型、校验、SQLite 与 schema
-server.go               会话、导航 API、上传与备份
-browser_windows.go      Windows 桌面打开浏览器与 SCM 服务
-browser_other.go        Linux 启动行为
-server_test.go          API、持久化、权限及恢复测试
-web/src/                Vue 首页、表单、样式与自动图标
-static/                 构建后的嵌入资源
-scripts/                开发验收、启动与发布脚本
-deploy/                 systemd 示例
-```
-
-页面没有定时请求、监控任务或后台轮询；时钟每分钟只在浏览器更新一次。首页以一次导航请求获取数据，搜索在浏览器完成。主流浏览器兼容性和目标平台实际验证范围以验收记录为准。
-
-## 许可证
-
-NavHub 使用 [MIT License](LICENSE)，允许使用、修改和再分发，请保留版权及许可声明。第三方依赖遵循各自的许可证。
+首页布局参考 Sun-Panel 的使用方式，未复制其代码、品牌或素材。NavHub 使用 [MIT License](LICENSE)；使用、修改或分发时请保留版权和许可声明，第三方依赖遵循各自许可证。
